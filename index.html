@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Find verified men's and women's PGs in Bengaluru with room sharing prices, food, facilities, advance and Google Maps location." />
+  <title>NammaNest — Find Your PG in Bengaluru</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home"><span class="brand-mark">N</span><span>NammaNest</span></a>
+    <nav><a href="#listings">PGs</a><a href="#map">Map</a><a href="#how">How it works</a></nav>
+    <button class="outline-btn" onclick="document.getElementById('listings').scrollIntoView({behavior:'smooth'})">Find a PG</button>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">BENGALURU PG FINDER</span>
+        <h1>Find a PG that fits your <em>life</em>, not just your budget.</h1>
+        <p>Compare men's and women's PGs by location, sharing type, rent, food, facilities, advance and exact map location.</p>
+        <div class="search-panel">
+          <div class="search-field"><span>⌕</span><input id="searchInput" type="search" placeholder="Search Koramangala, BTM, Whitefield..." /></div>
+          <select id="genderFilter"><option value="all">Men & Women</option><option value="men">Men</option><option value="women">Women</option></select>
+          <select id="sharingFilter"><option value="all">Any sharing</option><option value="single">Single</option><option value="double">Double</option><option value="triple">Triple</option><option value="four">4 sharing</option></select>
+          <button class="primary-btn" id="searchBtn">Search PGs</button>
+        </div>
+        <div class="trust-row"><span>✓ Clear pricing</span><span>✓ Facilities listed</span><span>✓ Map location</span></div>
+      </div>
+      <div class="hero-image"><img src="https://images.unsplash.com/photo-1560185008-b033106af5c3?auto=format&fit=crop&w=1100&q=85" alt="Modern bedroom interior" /><div class="floating-card"><strong>25+</strong><span>sample listings</span></div></div>
+    </section>
+
+    <section class="stats"><div><strong>4</strong><span>Sharing options</span></div><div><strong>₹</strong><span>Transparent rent</span></div><div><strong>⌖</strong><span>Google Maps links</span></div><div><strong>24/7</strong><span>Search anytime</span></div></section>
+
+    <section id="listings" class="section">
+      <div class="section-heading"><div><span class="eyebrow">EXPLORE</span><h2>PGs made easy to compare</h2></div><span class="result-count" id="resultCount"></span></div>
+      <div class="content-grid">
+        <aside class="filters">
+          <h3>Filter your stay</h3>
+          <label>Area<select id="areaFilter"><option value="all">All Bengaluru</option><option value="Koramangala">Koramangala</option><option value="BTM Layout">BTM Layout</option><option value="Whitefield">Whitefield</option><option value="HSR Layout">HSR Layout</option><option value="Marathahalli">Marathahalli</option><option value="Electronic City">Electronic City</option></select></label>
+          <label>Maximum monthly rent<input id="priceFilter" type="range" min="4000" max="30000" value="30000" step="500"><output id="priceOutput">₹30,000</output></label>
+          <label class="check"><input type="checkbox" id="foodFilter"> Food included</label>
+          <label class="check"><input type="checkbox" id="wifiFilter"> Wi-Fi</label>
+          <label class="check"><input type="checkbox" id="laundryFilter"> Laundry</label>
+          <button class="reset-btn" id="resetBtn">Reset filters</button>
+          <div class="note"><strong>Prototype data</strong><p>The listings below are sample records for the website prototype. Replace them with owner-verified data before publishing as a real marketplace.</p></div>
+        </aside>
+        <div class="listings" id="listingGrid"></div>
+      </div>
+    </section>
+
+    <section id="map" class="map-section">
+      <div class="map-copy"><span class="eyebrow">LOCATION</span><h2>See where your PG is before you visit.</h2><p>Select a listing to preview its location. Use the Google Maps button for directions, distance and navigation.</p><div class="selected-place" id="selectedPlace">Select a PG to load its map.</div><a class="primary-btn map-link" id="mapsLink" target="_blank" rel="noopener" href="https://www.google.com/maps">Open Google Maps ↗</a></div>
+      <div class="map-frame" id="mapFrame"><div class="map-placeholder"><span>⌖</span><p>Select a PG above</p></div></div>
+    </section>
+
+    <section id="how" class="section how"><div class="section-heading"><div><span class="eyebrow">HOW IT WORKS</span><h2>From search to site visit</h2></div></div><div class="steps"><article><span>01</span><h3>Search</h3><p>Choose men's or women's PG, area, sharing type and budget.</p></article><article><span>02</span><h3>Compare</h3><p>See rent, advance, food, facilities and owner/contact information in one place.</p></article><article><span>03</span><h3>Check location</h3><p>Open the PG in Google Maps and verify the exact address before visiting.</p></article><article><span>04</span><h3>Contact</h3><p>Call or WhatsApp the owner, ask about availability and confirm all charges.</p></article></div></section>
+
+    <section class="owner-cta"><div><span class="eyebrow">FOR PG OWNERS</span><h2>Own a PG? Add your property.</h2><p>Future version: owner login, document verification, availability, photos, pricing and enquiry management.</p></div><button class="primary-btn" onclick="alert('Owner onboarding will be added in the next version.')">List my PG</button></section>
+  </main>
+
+  <footer><div><a class="brand" href="#home"><span class="brand-mark">N</span><span>NammaNest</span></a><p>Find a better stay in Bengaluru.</p></div><div><strong>Product roadmap</strong><p>Verified listings · Owner portal · Reviews · Saved PGs</p></div><div><strong>Important</strong><p>Always verify rent, deposit, food, rules and address directly with the owner before paying.</p></div></footer>
+  <script src="script.js"></script>
+</body>
+</html>
