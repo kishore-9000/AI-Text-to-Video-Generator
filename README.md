@@ -1,57 +1,49 @@
 # VeoForge — AI Text-to-Video Generator
 
-A Next.js App Router application that sends text prompts to the real Google Gemini API video-generation endpoint for Veo 3.1, monitors the asynchronous operation, and securely proxies the finished video to the browser.
+## GitHub Pages deployment
 
-## Provider
+This version is configured as a **static Next.js export** for a repository named `AI-Text-to-Video-Generator`.
 
-This project integrates **Google Veo 3.1** through the Gemini API. The integration uses the documented `predictLongRunning` endpoint and polls the returned operation until `done` is true.
+### Next.js static-export settings
 
-Current Veo 3.1 Gemini API constraints are reflected in the UI: 8-second text-to-video output, with 16:9 or 9:16 aspect ratios. 1:1 is displayed because the product requested that control, but is intentionally disabled at generation time rather than pretending it works.
+`next.config.ts` contains:
 
-## API key
+- `output: "export"`
+- `basePath: "/AI-Text-to-Video-Generator"`
+- `images.unoptimized: true`
 
-1. Create a Google AI Studio / Gemini API key with access to the selected Veo model.
-2. Copy `.env.example` to `.env.local`.
-3. Put the key in `GEMINI_API_KEY`.
-4. Never use `NEXT_PUBLIC_GEMINI_API_KEY`; the key must remain server-side.
+### GitHub Actions
 
-## Run locally
+`.github/workflows/deploy.yml` builds the static `out/` directory and publishes it to the `gh-pages` branch on every push to `main`.
 
-```bash
-npm install
-cp .env.example .env.local
-# edit .env.local and set GEMINI_API_KEY
-npm run dev
-```
+### Important: GitHub Pages cannot run the Next.js API routes
 
-Open http://localhost:3000.
+Static GitHub Pages can host the frontend, but it cannot execute the server-side `/api/generate`, `/api/status`, and `/api/video` route handlers that were in the original application. Those routes were removed from the static build and the client now uses `NEXT_PUBLIC_API_BASE_URL` to call a separately hosted secure backend.
 
-## Deploy to Vercel
+This is required to keep the Gemini/Veo API key private. **Never put `GEMINI_API_KEY` in the frontend or any `NEXT_PUBLIC_*` variable.**
 
-```bash
-npm install -g vercel
-vercel login
-vercel
-```
+### GitHub setup
 
-When prompted, link/create the project. In the Vercel project settings, add `GEMINI_API_KEY` as an Environment Variable for Production (and Preview if desired). Then deploy:
+1. Create/push a GitHub repository named exactly `AI-Text-to-Video-Generator`.
+2. Go to **Settings → Pages** and select **GitHub Actions** as the source.
+3. Go to **Settings → Secrets and variables → Actions → Variables**.
+4. Add repository variable:
 
-```bash
-vercel --prod
-```
+   `NEXT_PUBLIC_API_BASE_URL=https://YOUR-BACKEND.example.com/api`
 
-You can also connect the Git repository in Vercel and deploy automatically.
+5. Push to `main`.
+6. The workflow builds Next.js and deploys `out/` to `gh-pages`.
 
-## Switching providers/models
+Your site will be:
 
-The UI and API routes depend on the small `VideoProvider` interface in `lib/providers/types.ts`. Add a new provider implementation under `lib/providers/`, implement `start()` and `status()`, then update `lib/video-service.ts`. No frontend changes are required.
+`https://YOUR_USERNAME.github.io/AI-Text-to-Video-Generator/`
 
-For a different Google Veo model, change `VEO_MODEL` in the environment. Confirm that the model supports the same request fields before enabling additional controls.
+### Backend API contract
 
-## Security / architecture
+The secure backend should expose:
 
-- API keys are read only in server-side modules.
-- The browser calls `/api/generate`, never Google's API directly.
-- Generation is asynchronous: start -> operation ID -> polling -> video URI.
-- `/api/video` validates the upstream hostname and streams the generated video with the server-held API key.
-- Generation history is local browser storage; add a database/auth layer if history must be shared across devices/users.
+- `POST /generate` → `{ "operationId": "..." }`
+- `GET /status?id=...` → `{ "status": "processing|completed|failed", "progress": 0-100, "videoUrl": "..." }`
+- `GET /video?uri=...` → streams/proxies the provider video securely
+
+The existing Google Veo server implementation from the original project can be hosted separately as this backend. Keep its `GEMINI_API_KEY` on the server.
